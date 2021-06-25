@@ -59,9 +59,9 @@ function displayTag(type) { //boom, success
         "Would you look at that!",
         "Yes!",
         "No such thing as too many cascades.",
-        "That was a good move.",
+        "That was a good move."
     ]
-    let dangerCollection = [
+    let dangerCollection = [ //NOT USED
         "Yikes!",
         "Careful now...",
         "How many?!",
@@ -83,7 +83,8 @@ function displayTag(type) { //boom, success
             collection = successCollection;
             break;
     }
-    picker = Math.round(Math.random() * collection.length);
+    picker = Math.floor(Math.random() * collection.length);
+    console.log(picker);
     let tagLine = collection[picker];
     document.getElementById("tagLine").innerText = tagLine;
 }
