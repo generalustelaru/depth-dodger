@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="icon" href="graphics/falseFlag.svg">
+        <link rel="icon" href="graphics/sus.svg">
         <title>
             Depth Dodger
         </title>
@@ -11,6 +11,22 @@
             @font-face {
               font-family: "Escape";
               src: url("fonts/Vtks Escape.ttf");
+            }
+            @font-face {
+              font-family: "HVD";
+              src: url("fonts/HVD_Poster.ttf");
+            }
+            @font-face {
+              font-family: "Sketch";
+              src: url("fonts/KGBlankSpaceSketch.ttf");
+            }
+            @font-face {
+              font-family: "Solid";
+              src: url("fonts/KGBlankSpaceSolid.ttf");
+            }
+            @font-face {
+              font-family: "Stamp";
+              src: url("fonts/KGTribecaStamp.ttf");
             }
             </style>
     </head>
@@ -24,7 +40,15 @@
                 <!-- Game Board goes here -->
             </div>
             <div class="section" id="control">
-                <div class="button" id="start" onclick="startGame()">
+                <div class="element swatch">
+                    <div class="swatchText">Pacifiers</div>
+                    <div class="swatchInfo" id="lives">02</div>
+                </div>
+                <div class="element swatch">
+                    <div class="swatchText">Mines</div>
+                    <div class="swatchInfo" id="mineCount">99</div>
+                </div>
+                <div class="element button" id="start" onclick="startGame()">
                     Play
                 </div>
 

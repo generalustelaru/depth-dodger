@@ -41,13 +41,22 @@ function leave() {
 
 function markCell() { // Right click
     if (gameStatus == true && activeCell != "") {
-        console.log("markCell " + activeCell + " " + boardFog.get(activeCell));
-        if (boardFog.get(activeCell) == "covered") {
-            boardFog.set(activeCell, "sus");
-            document.getElementById(activeCell).style.backgroundImage = "url(graphics/sus.svg)";
-        } else {
-            boardFog.set(activeCell, "covered");
-            document.getElementById(activeCell).style.backgroundImage = "url(graphics/cover.svg)";
+        //console.log("markCell " + activeCell + " " + boardFog.get(activeCell));
+        let coverStatus = boardFog.get(activeCell);
+        let coverCell = document.getElementById(activeCell);
+        switch (coverStatus) {
+            case "covered": 
+                boardFog.set(activeCell, "sus");
+                coverCell.style.backgroundImage = "url(graphics/sus.svg)";
+                break;
+            case "sus":
+                boardFog.set(activeCell, "lowSus");
+                coverCell.style.backgroundImage = "url(graphics/lowSus.svg)";
+                break;
+            case "lowSus":
+                boardFog.set(activeCell, "covered");
+                coverCell.style.backgroundImage = "url(graphics/covered.svg)";
+                break;
         }
     }
 }

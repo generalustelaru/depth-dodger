@@ -26,7 +26,7 @@ function drawGameBoard() {
             let coverCoords = x + "o" + y;
             coverCell.id = coverCoords;
             coverCell.style.zIndex = "9";
-            coverCell.style.backgroundImage = "url(graphics/cover.svg)";
+            coverCell.style.backgroundImage = "url(graphics/covered.svg)";
             boardFog.set(coverCoords, "covered");
             cellContainer.appendChild(coverCell);
         }

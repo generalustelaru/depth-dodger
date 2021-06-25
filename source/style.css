@@ -9,7 +9,6 @@
     left: 0;
     min-width: 100%;
     min-height: 100%;
-    
     background-image: url(../graphics/depths.svg);
 }
 
@@ -17,6 +16,7 @@
     width: 100%;
     box-sizing: border-box;
     text-align: center;
+    margin: auto;
 
 }
 .section * {
@@ -65,26 +65,45 @@
 }
 
 #control {
+    width: 1200px;
     padding-top: 20px;
     height: 80px;
+    padding-top: 15px;
+    display: flex;
 }
-.button {
+#control * {
+    float: left;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    justify-content: center;
+
+}
+.element {
     box-sizing: border-box;
-    height: 50px;;
-    width: 155px;
+    height: 50px;
     background: rgb(53, 130, 149);
     font-family: Escape;
     font-size: 40px;
-    padding-top: 5px;
-    
+    padding: 5px;
+}
+.button {
+    width: 155px;
+    display: flex;
 }
 .button:hover {
     background: rgb(116, 215, 240);
 }
-/*.button:active {
-    width: 128px;
-    height: 48px;
-}*/
+.swatch {
+    display: flex;
+}
+.swatchText {
+    padding-right: 10px;
+}
+.swatchInfo {
+    font-family: HVD;  
+    color: white;
+}
+
 #box {
     top: -50px;
 }
