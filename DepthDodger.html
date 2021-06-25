@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="icon" href="graphics/falseFlag.svg">
+        <title>
+            Depth Dodger
+        </title>
+        <link rel="stylesheet" href="source/style.css">
+        <style media="screen">
+            @font-face {
+              font-family: "Escape";
+              src: url("fonts/Vtks Escape.ttf");
+            }
+            </style>
+    </head>
+    <body onload="drawGameBoard()">
+        <div id="depths">
+            <div class="section" id="header">
+                <h1>Depth Dodger</h1>
+                <h3 id="tagLine">It's minesweeper, but underwater.</h3>
+            </div>
+            <div class="section" id="gameArea">
+                <!-- Game Board goes here -->
+            </div>
+            <div class="section" id="control">
+                <div class="button" id="start" onclick="startGame()">
+                    Play
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- <script src="source/script.js"></script> -->
+        <script src="source/main.js"></script>
+        <script src="source/interface.js"></script>
+        <script src="source/utilities.js"></script>
+    </body>
+</html>

@@ -1,0 +1,90 @@
+*{
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+#depths {
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    
+    background-image: url(../graphics/depths.svg);
+}
+
+.section {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+
+}
+.section * {
+    margin: auto;
+}
+#header {
+    height: 80px;
+    padding-top: 20px;
+    font-family: Escape;
+    color:rgb(116, 215, 240);
+}
+#win, #lose{
+    display: none;
+}
+#gameBoard{
+    height: 657px;
+    width: 1231px;
+}
+.row {
+    height: 40px;
+    width: 100%;
+}
+.cellContainer {
+    height: 40px;
+    width: 40px;
+    float: left;
+}
+.cell {
+    z-index: 1;
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    float: left;
+    opacity: 90%;
+    
+}
+.coverCell {
+    z-index: 9;
+    position: absolute;
+    height: 40px;
+    width: 40px;
+    float: left;
+    opacity: 100%; /*DEBUG*/
+    transition-property: all;
+    transition-duration: 500ms;
+}
+
+#control {
+    padding-top: 20px;
+    height: 80px;
+}
+.button {
+    box-sizing: border-box;
+    height: 50px;;
+    width: 155px;
+    background: rgb(53, 130, 149);
+    font-family: Escape;
+    font-size: 40px;
+    padding-top: 5px;
+    
+}
+.button:hover {
+    background: rgb(116, 215, 240);
+}
+/*.button:active {
+    width: 128px;
+    height: 48px;
+}*/
+#box {
+    top: -50px;
+}
