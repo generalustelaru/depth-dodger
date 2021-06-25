@@ -35,6 +35,9 @@ function drawGameBoard() {
     document.getElementById("gameArea").appendChild(gameBoard);
 }
 
+var axisPattern = ["x", "y", "x", "x", "y", "y", "x", "x"];
+var driftPattern = [-1, -1, 1, 1, 1, 1, -1, -1];
+
 function populate(startCoords) {
     // console.log("populate" + startCoords);
     let mines = 99;
@@ -58,33 +61,26 @@ function populate(startCoords) {
     }
     var coordIterator = boardElements.keys();
     for (let i = 0; i < 480; i++) {
-        let coords = coordIterator.next().value;
-        if (boardElements.get(coords) == "mine") {
+        let uCoords = coordIterator.next().value;
+        if (boardElements.get(uCoords) == "mine") {
             continue;
         }
         let proximityCount = 0;
-        let x = getX(coords);
-        let y = getY(coords);
-
-        if (boardElements.get(toUnderCoords(--x, y)) == "mine")
+        let x = getX(uCoords);
+        let y = getY(uCoords);
+        for (let i = 0; i < 8; i++) {
+            let drift = driftPattern[i];
+            let axis = axisPattern[i];
+            switch (axis) {
+                case "x": x += drift; break;
+                case "y": y += drift; break;
+            }
+            if (boardElements.get(toUnderCoords(x, y)) == "mine")
             ++proximityCount;
-        if (boardElements.get(toUnderCoords(x, --y)) == "mine")
-            ++proximityCount;
-        if (boardElements.get(toUnderCoords(++x, y)) == "mine")
-            ++proximityCount;
-        if (boardElements.get(toUnderCoords(++x, y)) == "mine")
-            ++proximityCount;
-        if (boardElements.get(toUnderCoords(x, ++y)) == "mine")
-            ++proximityCount;
-        if (boardElements.get(toUnderCoords(x, ++y)) == "mine")
-            ++proximityCount;
-        if (boardElements.get(toUnderCoords(--x, y)) == "mine")
-            ++proximityCount;
-        if (boardElements.get(toUnderCoords(--x, y)) == "mine")
-            ++proximityCount;
+        }
         if (proximityCount > 0) {
-            boardElements.set(coords, "bubl");
-            document.getElementById(coords).style.backgroundImage = "url(graphics/bubl" + proximityCount + ".svg)";
+            boardElements.set(uCoords, "bubl");
+            document.getElementById(uCoords).style.backgroundImage = "url(graphics/bubl" + proximityCount + ".svg)";
             //document.getElementById(coords).style.backgroundImage = "url(graphics/mine.svg)";
         }
     }
@@ -93,8 +89,6 @@ function populate(startCoords) {
 
 function revealCascade(uCoords) {
     // console.log("revealCascade");
-    let axisProgression = ["x", "y", "x", "x", "y", "y", "x", "x"];
-    let driftProgression = [-1, -1, 1, 1, 1, 1, -1, -1];
     let blanks = [uCoords];
     let statuses = ["blank"];
     let bSize = 1;
@@ -122,8 +116,8 @@ function revealCascade(uCoords) {
         let x = getX(focusCoords);
         let y = getY(focusCoords);
         for (let i = 0; i < 8; i++) {
-            let drift = driftProgression[i];
-            let axis = axisProgression[i];
+            let drift = driftPattern[i];
+            let axis = axisPattern[i];
             switch (axis) {
                 case "x": x += drift; break;
                 case "y": y += drift; break;
