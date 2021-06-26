@@ -1,48 +1,64 @@
-var boardElements = new Map();
-var boardFog = new Map();
+var boardElements = new Map(); // Stores uCoords and their statuses.
+var boardCover = new Map(); // Stores oCoords and their statuses.
 
-function drawGameBoard() {
+function resetGame() { 
+    document.getElementById("tagLine").innerText = "A New Daring Adventure!";
+    document.getElementById("gameArea").innerHTML = "";
+    virginMap = true;
+    movesLeft = 381; // 480-99 (381).
+    boardElements = new Map();
+    boardCover = new Map();    
+    drawGameBoard();
+    //let startButton = document.getElementById("start");.
+    //startButton.setAttribute("onclick", "startGame()");.
+    //startButton.innerText = "Start";.
+    isPlaying = false;
+    startGame();
+
+}
+
+function drawGameBoard() { // Called on page load. Does not start the game.
     let gameBoard = document.createElement("div");
     gameBoard.id = "gameBoard";
     for (let x = 0; x < 16; x++) {
         let row = document.createElement("div");
         row.className = "row";
         for (let y = 0; y < 30; y++) {
-            // cellContainer: Holds two overlapping elements
-            let cellContainer = document.createElement("div");            
-            cellContainer.className = "cellContainer";
-            row.appendChild(cellContainer);
-            //
-            let cell = document.createElement("div");            
-            cell.className = "cell";
+            // tileContainer: Holds two overlapping elements
+            let tileContainer = document.createElement("div");            
+            tileContainer.className = "tileContainer";
+            row.appendChild(tileContainer);
+            // boardTile: Displays a mine, a bubble, or nothing. Right now it's nothing.
+            let boardTile = document.createElement("div");            
+            boardTile.className = "boardTile";
             let coords = x + "u" + y;
-            cell.id = coords;
-            cell.style.zIndex = "1";
+            boardTile.id = coords;
+            boardTile.style.zIndex = "1";
             boardElements.set(coords, "blank");
-            cellContainer.appendChild(cell);
-            //
-            let coverCell = document.createElement("div");            
-            coverCell.className = "coverCell";
+            tileContainer.appendChild(boardTile);
+            // coverTile: Displays flags and obscures the board.
+            let coverTile = document.createElement("div");            
+            coverTile.className = "coverTile";
             let coverCoords = x + "o" + y;
-            coverCell.id = coverCoords;
-            coverCell.style.zIndex = "9";
-            coverCell.style.backgroundImage = "url(graphics/covered.svg)";
-            boardFog.set(coverCoords, "covered");
-            cellContainer.appendChild(coverCell);
+            coverTile.id = coverCoords;
+            coverTile.style.zIndex = "9";
+            coverTile.style.backgroundImage = "url(graphics/covered.svg)";
+            boardCover.set(coverCoords, "covered");
+            tileContainer.appendChild(coverTile);
         }
         gameBoard.appendChild(row);
     }
     document.getElementById("gameArea").appendChild(gameBoard);
 }
 
-var axisPattern = ["x", "y", "x", "x", "y", "y", "x", "x"];
+var axisPattern = ["x", "y", "x", "x", "y", "y", "x", "x"]; // tile-checking pattern for bubble values and multi-reveals (bursts)
 var driftPattern = [-1, -1, 1, 1, 1, 1, -1, -1];
 
-function populate(startCoords) {
-    // console.log("populate" + startCoords);
+function populateBoard(startCoords) {
     let mines = 99;
-    let cells = 480;
-    while (mines > 0) {
+    let tiles = 480;
+    let delay = 0.0;
+    while (mines > 0) { // Mines are placed randomly at an ever-increasing probability rate.
         var coordIterator = boardElements.keys();
         for (let i = 0; i < 480; i++) {
             let coords = coordIterator.next().value;
@@ -50,61 +66,121 @@ function populate(startCoords) {
                 continue;
             }
             let dieRoll = Math.random();
-            if (dieRoll <= mines / cells) {
+            if (dieRoll <= mines / tiles) {
                 boardElements.set(coords, "mine");
-                document.getElementById(coords).style.backgroundImage = "url(graphics/mine.svg)";
+                let mine = document.getElementById(coords);                
+                mine.style.backgroundImage = "url(graphics/mine.svg)";
+                mine.style.animationName = "sleeping";
+                mine.style.animationDuration = "3s";
+                delay += 0.1;
+                mine.style.animationDelay = delay + "s";
+                mine.style.animationIterationCount = "infinite";
                 --mines;
             }
-            boardFog.set(coords, "covered");
-            --cells;
+            --tiles;
         }
     }
     var coordIterator = boardElements.keys();
-    for (let i = 0; i < 480; i++) {
+    for (let i = 0; i < 480; i++) { // Every non-mine tile is checked for adjacent mines
         let uCoords = coordIterator.next().value;
         if (boardElements.get(uCoords) == "mine") {
             continue;
         }
         let proximityCount = 0;
-        let x = getX(uCoords);
+        let x = getX(uCoords); // Coordinates are split into x & y and used to perform a circular check around the tile
         let y = getY(uCoords);
         for (let i = 0; i < 8; i++) {
             let drift = driftPattern[i];
             let axis = axisPattern[i];
             switch (axis) {
-                case "x": x += drift; break;
-                case "y": y += drift; break;
+                case "x":
+                    x += drift;
+                    break;
+                case "y":
+                    y += drift;
+                    break;
             }
             if (boardElements.get(toUnderCoords(x, y)) == "mine")
             ++proximityCount;
         }
-        if (proximityCount > 0) {
-            boardElements.set(uCoords, "bubl");
+        if (proximityCount > 0) { // Record the bubble value and assign the apropriate visual
+            boardElements.set(uCoords, "bubl" + proximityCount);
             document.getElementById(uCoords).style.backgroundImage = "url(graphics/bubl" + proximityCount + ".svg)";
-            //document.getElementById(coords).style.backgroundImage = "url(graphics/mine.svg)";
         }
     }
-    //reveal(convertCoords(startCoords));
 }
 
-function revealCascade(uCoords) {
-    // console.log("revealCascade");
-    let blanks = [uCoords];
-    let statuses = ["blank"];
+var serum = 0, salves = 1, recipe = 100;
+function storeSerum(amount) { // Determines and executes the 'crafting' of a new salve based on a bubble's value
+    serum += parseInt(amount);
+    if (serum >= recipe) {
+        ++salves;
+        serum -= recipe;
+        swatch = document.getElementById("salves");
+        swatch.innerText = "0" + salves;
+        swatch.style.color = "white";
+        document.getElementById("tagLine").innerText = "You crafted a soothing salve. You feel safer already.";
+    } else {
+        document.getElementById("tagLine").innerText = "Soothe serum: " + serum + "/" + recipe;
+    }
+}
+
+var boomTile;
+function boomProtocol(uCoords) { // Called whenever a mine is revealed during the game
+    if (salves > 0) {
+        consumeSalve();
+    } else {
+        isPlaying = false;
+        if (movesLeft < 96) { // End game random message
+            displayTag("boom");
+        } else {
+            document.getElementById("tagLine").innerText = "Pff...";
+        }
+        boomTile = uCoords;
+        setTimeout(awaken, 500); // Line 155
+    }
+}
+function consumeSalve() {
+    swatch = document.getElementById("salves");
+    --salves;
+    ++movesLeft;
+    updateFlagSwatch(--flagCounter);
+    if (salves > 0) {
+        swatch.innerText = "0" + salves;
+        document.getElementById("tagLine").innerText = "Salve administered! You're safe.";
+    } else {
+        document.getElementById("tagLine").innerText = "Careful now. This was your last one.";
+        swatch.innerText = "00";
+        swatch.style.color = "red";
+    }
+}
+function awaken() { // Separated from boomProtocol() to convey a brief suspence before ending the game.
+    document.getElementById(boomTile).style.backgroundImage = "url(graphics/mine_awaken.svg)";
+    let coordIterator = boardCover.keys();
+    for (let i = 0; i < 480; i++) { // Mark all erroneous flags for play review purposes.
+        let oCoords = coordIterator.next().value;
+        if (boardCover.get(oCoords) == "highSus" && boardElements.get(convertCoords(oCoords)) != "mine") {
+            document.getElementById(oCoords).style.backgroundImage = "url(graphics/falseFlag.svg)";
+        }
+    }
+}
+
+function burstProtocol(uCoords) { // Called when revealing a blank/empty tile
+    let blanks = [uCoords]; // blanks[] and statuses[] keep track of every blank tile that's encountered during this process.
+    let statuses = ["blank"]; // The triggering tile is already included and used as starting point.
     let bSize = 1;
     let allFound = false;
+    let animationDelay = 0.0;
     while(allFound == false) {
         allFound = true;
         let focusCoords;
-        for (let i = 0; i < bSize; i++) {
+        for (let i = 0; i < bSize; i++) { // Search the records for a blank tile that hasn't yet been processed.
             const uCoords = blanks[i];
-            //console.log("array uCoords " + uCoords);
             if (statuses[i] == "blank") {
                 allFound = false;
                 focusCoords = uCoords;
-                statuses[i] = "busted";
-                boardElements.set(uCoords, "busted");
-                //document.getElementById(convertCoords(uCoords)).style.opacity = "0%";
+                statuses[i] = "checked";
+                boardElements.set(uCoords, "checked");
                 break;
             }
         }
@@ -112,8 +188,7 @@ function revealCascade(uCoords) {
             displayTag("progress"); 
             break;
         }
-        //console.log("focusCoords " + focusCoords);
-        let x = getX(focusCoords);
+        let x = getX(focusCoords); // The tile's coordinates are then use to perform a circular check.
         let y = getY(focusCoords);
         for (let i = 0; i < 8; i++) {
             let drift = driftPattern[i];
@@ -123,18 +198,20 @@ function revealCascade(uCoords) {
                 case "y": y += drift; break;
             }
             let uScanCoords = toUnderCoords(x, y);
-            //console.log("scanCoords " + uScanCoords);
-            if (boardElements.has(uScanCoords)) {
+            if (boardElements.has(uScanCoords)) { // Avoid revealing innexistent tiles (i.e outside of the board edge)
                 let result = boardElements.get(uScanCoords);
                 let oScanCoords = convertCoords(uScanCoords);
-                redundancyCheck = boardFog.get(oScanCoords);
-                //redundancyCheck = document.getElementById(oScanCoords).style.opacity;
+                redundancyCheck = boardCover.get(oScanCoords); // Avoid revealing already-revealed tiles
                 if (redundancyCheck != "revealed") {
                     document.getElementById(oScanCoords).style.opacity = "0%";
-                    boardFog.set(oScanCoords, "revealed");
-                    --movesLeft;
+                    boardCover.set(oScanCoords, "revealed");
+                    --movesLeft; // Update game win condition appropriately.
+                    let animatedTile = document.getElementById(uScanCoords); // Apply animation.
+                    animationDelay += 0.005;
+                    animatedTile.style.animationDelay = animationDelay + "s";
+                    animatedTile.style.animationName = "burst";
                 }
-                if (result == "blank") {
+                if (result == "blank") { // If the examined tile is elligible, it is scheduled for processing.
                     blanks[bSize] = uScanCoords;
                     statuses[bSize++] = "blank";
                 }
@@ -143,38 +220,13 @@ function revealCascade(uCoords) {
     }
 }
 
-var boomCell;
-function boomProtocol(uCoords) {
-    gameStatus = false;
-    if (movesLeft < 191) {
-        displayTag("boom");
-    } else {
-        document.getElementById("tagLine").innerText = "Try and try again";
-    }
-    boomCell = uCoords;
-    setTimeout(awaken, 250);    
-    console.log("continue");
-}
-function awaken() {
-    console.log("awaken");
-    document.getElementById(boomCell).style.backgroundImage = "url(graphics/mine_awaken.svg)";
-    let coordIterator = boardFog.keys();
-    for (let i = 0; i < 480; i++) {
-        let oCoords = coordIterator.next().value;
-        if (boardFog.get(oCoords) == "sus" && boardElements.get(convertCoords(oCoords)) != "mine") {
-            document.getElementById(oCoords).style.backgroundImage = "url(graphics/falseFlag.svg)";
-        }
-    }
-}
-
 function successProtocol() {
-    gameStatus = false;
+    isPlaying = false;
     displayTag("success");
-    //alert("Game Won");
-    let coordIterator = boardFog.keys();
-    for (let i = 0; i < 480; i++) {
+    let coordIterator = boardCover.keys();
+    for (let i = 0; i < 480; i++) { // Remove bubbles and reveal the mines. Game Won.
         let oCoords = coordIterator.next().value;
-        if (boardFog.get(oCoords) != "revealed" ) {
+        if (boardCover.get(oCoords) != "revealed" ) {
             document.getElementById(oCoords).style.transitionDuration = "1200ms";
             document.getElementById(oCoords).style.opacity = "0%";
         } else {
@@ -183,3 +235,4 @@ function successProtocol() {
         }
     }
 }
+

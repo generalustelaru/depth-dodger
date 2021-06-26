@@ -1,0 +1,45 @@
+@keyframes perturb { /* Slight displacement */
+    0% {
+        transform:translateY(0%); /* at rest */
+    }
+    33% {
+        transform: translateY(2%); /* bounce */
+    }
+    66% {
+        transform: translateY(-1%);
+    }
+    100% {
+        transform: translateY(0%); /* return to rest */
+    }
+}
+@keyframes burst { /* Violent displacement */
+    0% {
+        transform:translateY(0%); /* at rest */
+    }
+    20% {
+        transform: translateY(4%); /* first bounce */
+    }
+    40% {
+        transform: translateY(-3%);
+    }
+    60% {
+        transform: translateY(2%); /* second bounce */
+    }
+    80% {
+        transform: translateY(-1%);
+    }
+    100% {
+        transform: translateY(0%); /* return to rest */
+    }
+}
+@keyframes sleeping { /* Gentle sway */
+    0% {
+        transform: translateY(-1%);
+    }
+    50% {
+        transform: translateY(4%);
+    }
+    100% {
+        transform: translateY(-1%);
+    }
+}

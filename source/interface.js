@@ -1,106 +1,109 @@
-var gameStatus = false;
-var virginMap = true;
-var movesLeft = 381; // 480-99 (381)
+var isPlaying = false;
+var virginMap = true; // A blank board;
+var movesLeft = 381; // Counts the number of required clicks before winning (480-99). It updates accordingly on single and multiple (burst) reveals.
 
 (
-    function() {
-        document.addEventListener('contextmenu', function(menu) {
-            markCell();
+    function() { // Disable default right click behaviour.
+        document.addEventListener('contextmenu', function(menu) { 
+            markTile();
             menu.preventDefault();
         });
     }
 )()
 
-function startGame() {
-    if (gameStatus == false) {
+function startGame() { // Sets up initial conditions not accounting for past plays.
+    if (isPlaying == false) {
         startButton = document.getElementById("start")
         startButton.innerText = "Reset";
         startButton.setAttribute("onclick", "resetGame()");
-        gameStatus = true; 
-        let oCoordIterator = boardFog.keys();
-        for (let i = 0; i < 480; i++) {
+        isPlaying = true;
+        flagCounter = 99;        
+        updateFlagSwatch(flagCounter);
+        salves = 1; // Soothing Salves is a new game mechanism. It makes it easier to solve ambiguous configurations.
+        serum = 0; // Every single reveal grants an amount of serum (1~8). 100 serum makes 1 salve.
+        let swatch = document.getElementById("salves");
+        swatch.innerText = "01";
+        swatch.style.color = "white";
+        let oCoordIterator = boardCover.keys();
+        for (let i = 0; i < 480; i++) { // Enables interactions
             let oCoords = oCoordIterator.next().value;
-            let coverCell = document.getElementById(oCoords);
-            coverCell.setAttribute("onmouseover", "hover(\"" + oCoords + "\")");
-            coverCell.setAttribute("onmouseleave", "leave()");             
-            coverCell.setAttribute("onclick", "reveal(\"" + oCoords + "\")");
+            let coverTile = document.getElementById(oCoords);
+            coverTile.setAttribute("onmouseover", "hover(\"" + oCoords + "\")");
+            coverTile.setAttribute("onmouseleave", "leave()");             
+            coverTile.setAttribute("onclick", "revealTile(\"" + oCoords + "\")");
         }   
     } else {
         resetGame();
     }
 }
 
-var activeCell; //for right clicking
+var activeCoverTile; // hover() and leave() are used exclusively to enable right-clicking on tiles.
 function hover(oCoords) {
-    activeCell = oCoords;
+    activeCoverTile = oCoords; // oCoords refers to coordinates of tiles covering the board (over).
 }
-
 function leave() {
-    activeCell = "";
+    activeCoverTile = "";
 }
 
-function markCell() { // Right click
-    if (gameStatus == true && activeCell != "") {
-        //console.log("markCell " + activeCell + " " + boardFog.get(activeCell));
-        let coverStatus = boardFog.get(activeCell);
-        let coverCell = document.getElementById(activeCell);
+var flagCounter;
+function markTile() { // Right-click behaviour.
+    if (isPlaying == true && activeCoverTile != "") {
+        let coverStatus = boardCover.get(activeCoverTile); // Map holding the state of each tile covering the board (oCoords).
+        let coverTile = document.getElementById(activeCoverTile);
         switch (coverStatus) {
             case "covered": 
-                boardFog.set(activeCell, "sus");
-                coverCell.style.backgroundImage = "url(graphics/sus.svg)";
+                boardCover.set(activeCoverTile, "highSus"); // "highSus" means it's "flagged." Wrong placements get corrected at game end.
+                coverTile.style.backgroundImage = "url(graphics/highSus.svg)";
+                updateFlagSwatch(--flagCounter);
                 break;
-            case "sus":
-                boardFog.set(activeCell, "lowSus");
-                coverCell.style.backgroundImage = "url(graphics/lowSus.svg)";
+            case "highSus":
+                boardCover.set(activeCoverTile, "lowSus"); // Secondary flagging. lowSus have no impact.
+                coverTile.style.backgroundImage = "url(graphics/lowSus.svg)";
+                updateFlagSwatch(++flagCounter);
                 break;
             case "lowSus":
-                boardFog.set(activeCell, "covered");
-                coverCell.style.backgroundImage = "url(graphics/covered.svg)";
+                boardCover.set(activeCoverTile, "covered");
+                coverTile.style.backgroundImage = "url(graphics/covered.svg)";
                 break;
         }
     }
 }
 
-function reveal(oCoords) { // Left Click
-    if (boardFog.get(oCoords) != "revealed") {
-        if (gameStatus == true) {
-            //console.log("reveal");
-            let uCoords = convertCoords(oCoords);
+function revealTile(oCoords) { // Left-click on a tile.
+    if (boardCover.get(oCoords) != "revealed" && boardCover.get(oCoords) != "highSus") {
+        if (isPlaying == true) {
+            let uCoords = convertCoords(oCoords); // Having two layers means we often need to access both coordiantes. uCoords is for elements on the board (under).
             if (virginMap == true) {
                 virginMap = false;
-                //console.log(uCoords);
-                populate(uCoords);
+                populateBoard(uCoords); // Board elements get placed only after the first click (see in main.js).
             }
-            let coverCell = document.getElementById(oCoords);
-            coverCell.style.opacity = "0%";
-            boardFog.set(oCoords, "revealed");
+            let coverTile = document.getElementById(oCoords);
+            coverTile.style.opacity = "0%"; // Revealed tiles never trully go away.
+            boardCover.set(oCoords, "revealed");
             --movesLeft;
-            let cellStatus = boardElements.get(uCoords);
-            switch (cellStatus) {
-                case "blank": revealCascade(uCoords); break;
-                case "mine": boomProtocol(uCoords); break;
-                default: break;
+            let tileStatus = boardElements.get(uCoords);
+            let bubl = RegExp(/bubl/);
+            if (tileStatus.match(bubl)) { // The number of mines surounding the bubble translates into serum
+                let extract = RegExp(/\d/);
+                let vial = tileStatus.match(extract)[0];
+                storeSerum(vial);
+                document.getElementById(convertCoords(oCoords)).style.animationName = "perturb";
+            } else {
+                switch (tileStatus) {
+                    case "blank":
+                        burstProtocol(uCoords); // Reveal all connected blank tiles.
+                        break;
+                    case "mine":
+                        boomProtocol(uCoords); // Use a salve or end the game in a loss.
+                        break;
+                    default:
+                        break;
+                }
             }
-            //console.log(movesLeft);
+            
             if (movesLeft == 0) {
-                successProtocol();
+                successProtocol(); // Reveal all remaining mines and end the game in a win.
             }       
         }
-    }
-    
-}
-function resetGame() { 
-    document.getElementById("tagLine").innerText = "A New Daring Adventure!";
-    document.getElementById("gameArea").innerHTML = "";
-    virginMap = true;
-    movesLeft = 381; // 480-99 (381)
-    boardElements = new Map();
-    boardFog = new Map();    
-    drawGameBoard();
-    //let startButton = document.getElementById("start");
-    //startButton.setAttribute("onclick", "startGame()");
-    //startButton.innerText = "Start";
-    gameStatus = false;
-    startGame();
-
+    } 
 }

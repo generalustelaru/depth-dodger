@@ -2,11 +2,12 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="icon" href="graphics/sus.svg">
+        <link rel="icon" href="graphics/lowSus.svg">
         <title>
             Depth Dodger
         </title>
         <link rel="stylesheet" href="source/style.css">
+        <link rel="stylesheet" href="source/animations.css">
         <style media="screen">
             @font-face {
               font-family: "Escape";
@@ -16,19 +17,7 @@
               font-family: "HVD";
               src: url("fonts/HVD_Poster.ttf");
             }
-            @font-face {
-              font-family: "Sketch";
-              src: url("fonts/KGBlankSpaceSketch.ttf");
-            }
-            @font-face {
-              font-family: "Solid";
-              src: url("fonts/KGBlankSpaceSolid.ttf");
-            }
-            @font-face {
-              font-family: "Stamp";
-              src: url("fonts/KGTribecaStamp.ttf");
-            }
-            </style>
+        </style>
     </head>
     <body onload="drawGameBoard()">
         <div id="depths">
@@ -40,22 +29,19 @@
                 <!-- Game Board goes here -->
             </div>
             <div class="section" id="control">
-                <div class="element swatch">
-                    <div class="swatchText">Pacifiers</div>
-                    <div class="swatchInfo" id="lives">02</div>
+                <div class="element swatch" id="salveSwatch">
+                    <div class="swatchText">Salves</div>
+                    <div class="swatchInfo" id="salves">00</div>
                 </div>
-                <div class="element swatch">
+                <div class="element swatch" id="mineSwatch">
                     <div class="swatchText">Mines</div>
-                    <div class="swatchInfo" id="mineCount">99</div>
+                    <div class="swatchInfo" id="mineCount">00</div>
                 </div>
                 <div class="element button" id="start" onclick="startGame()">
                     Play
                 </div>
-
             </div>
         </div>
-        
-        <!-- <script src="source/script.js"></script> -->
         <script src="source/main.js"></script>
         <script src="source/interface.js"></script>
         <script src="source/utilities.js"></script>

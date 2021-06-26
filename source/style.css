@@ -3,6 +3,7 @@
     padding: 0;
     user-select: none;
 }
+
 #depths {
     position: fixed; 
     top: 0; 
@@ -22,15 +23,17 @@
 .section * {
     margin: auto;
 }
+/* Header section */
 #header {
     height: 80px;
     padding-top: 20px;
     font-family: Escape;
     color:rgb(116, 215, 240);
 }
-#win, #lose{
-    display: none;
+#tagLine{
+    font-family: HVD;
 }
+/* Game board section */
 #gameBoard{
     height: 657px;
     width: 1231px;
@@ -39,22 +42,24 @@
     height: 40px;
     width: 100%;
 }
-.cellContainer {
+.tileContainer {
     height: 40px;
     width: 40px;
     float: left;
 }
-.cell {
-    z-index: 1;
+.boardTile {
     position: absolute;
     height: 40px;
     width: 40px;
     float: left;
     opacity: 90%;
-    
+    animation-iteration-count: 1;
+    animation-duration: 1s;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+    transition-property: all;
 }
-.coverCell {
-    z-index: 9;
+.coverTile {
     position: absolute;
     height: 40px;
     width: 40px;
@@ -63,20 +68,15 @@
     transition-property: all;
     transition-duration: 500ms;
 }
-
+/* Lower (control) section */
 #control {
-    width: 1200px;
+    width: 720px;
     padding-top: 20px;
     height: 80px;
     padding-top: 15px;
-    display: flex;
 }
 #control * {
     float: left;
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
-    justify-content: center;
-
 }
 .element {
     box-sizing: border-box;
@@ -88,22 +88,24 @@
 }
 .button {
     width: 155px;
-    display: flex;
 }
 .button:hover {
     background: rgb(116, 215, 240);
 }
 .swatch {
-    display: flex;
+    margin-right: 50px;
 }
 .swatchText {
     padding-right: 10px;
 }
 .swatchInfo {
-    font-family: HVD;  
+    font-family: HVD;
+    text-align: center;  
     color: white;
 }
-
-#box {
-    top: -50px;
+#mineSwatch {
+    width: 215px
+}
+#salveSwatch {
+    width: 250px;
 }
