@@ -57,7 +57,7 @@ var driftPattern = [-1, -1, 1, 1, 1, 1, -1, -1];
 function populateBoard(startCoords) {
     let mines = 99;
     let tiles = 480;
-    let delay = 0.0;
+    //let delay = 0.0;
     while (mines > 0) { // Mines are placed randomly at an ever-increasing probability rate.
         var coordIterator = boardElements.keys();
         for (let i = 0; i < 480; i++) {
@@ -72,7 +72,7 @@ function populateBoard(startCoords) {
                 mine.style.backgroundImage = "url(graphics/mine.svg)";
                 mine.style.animationName = "sleeping";
                 mine.style.animationDuration = "3s";
-                delay += 0.1;
+                let delay = Math.random();
                 mine.style.animationDelay = delay + "s";
                 mine.style.animationIterationCount = "infinite";
                 --mines;
@@ -128,7 +128,7 @@ function storeSerum(amount) { // Determines and executes the 'crafting' of a new
 var boomTile;
 function boomProtocol(uCoords) { // Called whenever a mine is revealed during the game
     if (salves > 0) {
-        consumeSalve();
+        consumeSalve(uCoords);
     } else {
         isPlaying = false;
         if (movesLeft < 96) { // End game random message
@@ -140,10 +140,12 @@ function boomProtocol(uCoords) { // Called whenever a mine is revealed during th
         setTimeout(awaken, 500); // Line 155
     }
 }
-function consumeSalve() {
+function consumeSalve(uCoords) {
     swatch = document.getElementById("salves");
+    bom = document.getElementById(uCoords);
     --salves;
     ++movesLeft;
+    bom.style.backgroundImage = "url(graphics/soothed.svg)";
     updateFlagSwatch(--flagCounter);
     if (salves > 0) {
         swatch.innerText = "0" + salves;
