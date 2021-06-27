@@ -108,7 +108,7 @@ function displayTag(type) { // A series of 'surprise' messages delivered at cert
 }
 
 function loseDialog(uCoords) {
-    /*let gameArea = document.getElementById("gameArea");
+    /* let gameArea = document.getElementById("gameArea");
     let bombTile = document.getElementById(uCoords);
     let left = bombTile.offsetLeft;
     let top = bombTile.offsetTop;
@@ -118,9 +118,9 @@ function loseDialog(uCoords) {
     dialog.id = "dialog";
     dialog.offsetLeft = left;
     dialog.offsetTop = top;
-    let body = document.querySelector("body");
-    gameArea.append(dialog);*/
+    //let body = document.querySelector("body");
+    gameArea.append(dialog); */
     
-    console.log("left: " + left + ", top: " + top);
+    //console.log("left: " + left + ", top: " + top);
     console.log("Did you bring me anything?");
 }

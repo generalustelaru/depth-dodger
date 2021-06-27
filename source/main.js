@@ -142,10 +142,12 @@ function boomProtocol(uCoords) { // Called whenever a mine is revealed during th
         loseDialog(uCoords);
     }
 }
+sothedMines = 0;
 function consumeDrink(uCoords) {
     swatch = document.getElementById("drinks");
     bom = document.getElementById(uCoords);
     displayTag("drink");
+    ++sothedMines;
     --drinks;
     ++movesLeft;
     bom.style.backgroundImage = "url(graphics/soothed.svg)";
@@ -159,6 +161,7 @@ function consumeDrink(uCoords) {
         }
     }
 }
+var wrongFlags = 0;
 function awaken() { // Separated from boomProtocol() to convey a brief suspence before ending the game.
     document.getElementById(boomTile).style.backgroundImage = "url(graphics/mine_awaken.svg)";
     let coordIterator = boardCover.keys();
@@ -166,8 +169,10 @@ function awaken() { // Separated from boomProtocol() to convey a brief suspence 
         let oCoords = coordIterator.next().value;
         if (boardCover.get(oCoords) == "highSus" && boardElements.get(convertCoords(oCoords)) != "mine") {
             document.getElementById(oCoords).style.backgroundImage = "url(graphics/falseFlag.svg)";
+            ++wrongFlags;
         }
     }
+    calculateScore();
 }
 
 function burstProtocol(uCoords) { // Called when revealing a blank/empty tile
@@ -208,6 +213,9 @@ function burstProtocol(uCoords) { // Called when revealing a blank/empty tile
                 let oScanCoords = convertCoords(uScanCoords);
                 redundancyCheck = boardCover.get(oScanCoords); // Avoid revealing already-revealed tiles
                 if (redundancyCheck != "revealed") {
+                    if (redundancyCheck == "highSus") {
+                        updateFlagSwatch(++flagCounter);
+                    }
                     document.getElementById(oScanCoords).style.opacity = "0%";
                     boardCover.set(oScanCoords, "revealed");
                     --movesLeft; // Update game win condition appropriately.
@@ -239,5 +247,25 @@ function successProtocol() {
             document.getElementById(convertCoords(oCoords)).style.opacity = "0%";
         }
     }
+    calculateScore();
 }
 
+function calculateScore() {
+    let tactics = drinks / 2 + serum;
+    let sneakyness = 99 - flagCounter - wrongFlags;
+    let score = tactics + sneakyness;
+    let scoreText = "SCORE: " + score + " PTS.";
+    let topScore = localStorage.getItem("topScore");
+    let serumMonitor = document.getElementById("serumMonitor");
+    console.log(topScore);
+    if (!topScore) {
+        localStorage.setItem("topScore", "0");
+    }
+    if (score > parseInt(topScore)) {
+        serumMonitor.innerText = "NEW TOP " + scoreText + " — you beat " + topScore;
+        localStorage.setItem("topScore", score);
+    } else {
+        serumMonitor.innerText = scoreText + " — top score " + topScore;
+    }
+    
+}
