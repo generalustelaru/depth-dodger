@@ -257,9 +257,9 @@ function calculateScore() {
     let scoreText = "SCORE: " + score + " PTS.";
     let topScore = localStorage.getItem("topScore");
     let serumMonitor = document.getElementById("serumMonitor");
-    console.log(topScore);
     if (!topScore) {
         localStorage.setItem("topScore", "0");
+        topScore = 0;
     }
     if (score > parseInt(topScore)) {
         serumMonitor.innerText = "NEW TOP " + scoreText + " — you beat " + topScore;
@@ -267,5 +267,4 @@ function calculateScore() {
     } else {
         serumMonitor.innerText = scoreText + " — top score " + topScore;
     }
-    
 }
