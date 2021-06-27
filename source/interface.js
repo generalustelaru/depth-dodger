@@ -19,10 +19,10 @@ function startGame() { // Sets up initial conditions not accounting for past pla
         isPlaying = true;
         flagCounter = 99;        
         updateFlagSwatch(flagCounter);
-        salves = 1; // Soothing Salves is a new game mechanism. It makes it easier to solve ambiguous configurations.
+        drinks = 1; // Soothing drinks is a new game mechanism. It makes it easier to solve ambiguous configurations.
         serum = 0; // Every single reveal grants an amount of serum (1~8). 100 serum makes 1 salve.
-        document.getElementById("serumMonitor").innerText = "Soothe serum: " + serum + "/" + recipe;
-        let swatch = document.getElementById("salves");
+        document.getElementById("serumMonitor").innerText = "Bubble serum: " + serum + "/" + recipe;
+        let swatch = document.getElementById("drinks");
         swatch.innerText = "01";
         swatch.style.color = "white";
         let oCoordIterator = boardCover.keys();
@@ -101,7 +101,6 @@ function revealTile(oCoords) { // Left-click on a tile.
                         break;
                 }
             }
-            
             if (movesLeft == 0) {
                 successProtocol(); // Reveal all remaining mines and end the game in a win.
             }       

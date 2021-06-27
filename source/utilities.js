@@ -2,20 +2,19 @@
 
 function updateFlagSwatch(counter) { // There are enough different circumstances for this to be a dedicated function
     let counterString;
-    let swatch = document.getElementById("mineCount");
-    if (counter >= 0) {
-        swatch.style.color = "white";
-        if (counter < 10) {
-            counterString = "0" + counter;
-        } else {
-            counterString = counter;
-        }
-        swatch.innerText = counterString;    
+    let mineCount = document.getElementById("mineCount");
+    if (-1 < counter && counter < 10) {
+        counterString = "0" + counter;
     } else {
-        swatch.innerText = "00";
-        swatch.style.color = "red";
+        counterString = counter;
     }
-    
+    if (counter < 0) {
+        mineCount.style.color = "red";
+    } else {
+        mineCount.style.color = "white";
+    }
+    mineCount.innerText = counterString;
+
 }
 
 function getX(coords) { // Used in circular tile checks (populateBoard() and cascadeProtocol())
@@ -54,7 +53,7 @@ function displayTag(type) { // A series of 'surprise' messages delivered at cert
         "Darnit! And you had so much of it figured out!",
         "OwO",
         "Ahh! That's tough luck. Really.",
-        "Maybe you should have brought more salves."
+        "Maybe you should have brought more drinks."
     ];
     let successCollection = [
         "True to the Name. Congratulations!",
@@ -66,7 +65,7 @@ function displayTag(type) { // A series of 'surprise' messages delivered at cert
     let progressCollection = [
         "Good!",
         "It's coming along nicely",
-        "Great going, kid! Don't get cocky.",
+        "Great going, kid!",
         "Nice!",
         "Oh, wow!",
         "Nice find!",
@@ -75,10 +74,26 @@ function displayTag(type) { // A series of 'surprise' messages delivered at cert
         "No such thing as too many bursts.",
         "What a nice suprise!"
     ]
+    let drinkCollection = [
+        "You quickly spill the concoction onto the mine's hull.",
+        "The batch slips out of your hand but currents take it towards the mine.",
+        "You were prepared. The mine now seems content.",
+        "Flawless administering!",
+        "The mine, thankfully, leaves you alone.",
+        "Quick thinking lets you administer the substance before the mine can react.",
+        "This mine seems to be enjoying it more than usual!",
+        "One more happy mine, one extra chance at life for you.",
+        "You give it the drink, but wonder about its effects.",
+        "Ah, that's a fair trade.",
+        "Bubble drink administered! You're safe."
+    ]
     let collection;
     switch (type) {
         case "boom":
             collection = boomCollection;
+            break;
+        case "drink":
+            collection = drinkCollection;
             break;
         case "progress":
             collection = progressCollection;
@@ -92,3 +107,20 @@ function displayTag(type) { // A series of 'surprise' messages delivered at cert
     document.getElementById("tagLine").innerText = tagLine;
 }
 
+function loseDialog(uCoords) {
+    let gameArea = document.getElementById("gameArea");
+    let bombTile = document.getElementById(uCoords);
+    let left = bombTile.offsetLeft;
+    let top = bombTile.offsetTop;
+
+    let dialog = document.createElement("div");
+    dialog.innerText = "Did you bring me anything?";
+    dialog.id = "dialog";
+    dialog.offsetLeft = left;
+    dialog.offsetTop = top;
+    //let body = document.querySelector("body");
+    gameArea.append(dialog);
+    
+    console.log("left: " + left + ", top: " + top);
+    //console.log("Did you bring me anything?");
+}

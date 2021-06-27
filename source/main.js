@@ -39,7 +39,7 @@ function drawGameBoard() { // Called on page load. Does not start the game.
             coverTile.className = "coverTile";
             let coverCoords = x + "o" + y;
             coverTile.id = coverCoords;
-            coverTile.style.zIndex = "9";
+            coverTile.style.zIndex = "2";
             coverTile.style.backgroundImage = "url(graphics/covered.svg)";
             boardCover.set(coverCoords, "covered");
             tileContainer.appendChild(coverTile);
@@ -108,28 +108,28 @@ function populateBoard(startCoords) {
     }
 }
 
-var serum = 0, salves = 1, recipe = 100;
-function storeSerum(amount) { // Determines and executes the 'crafting' of a new salve based on a bubble's value
+var serum = 0, drinks = 1, recipe = 100;
+function storeSerum(amount) { // Determines and executes the 'crafting' of a new drink based on a bubble's value
     serum += parseInt(amount);
     if (serum >= recipe) {
-        ++salves;
+        ++drinks;
         serum -= recipe;
-        swatch = document.getElementById("salves");
-        swatch.innerText = "0" + salves;
-        if (salves > 2) {
+        swatch = document.getElementById("drinks");
+        swatch.innerText = "0" + drinks;
+        if (drinks > 2) {
             swatch.style.color = "lightgreen";
         } else {
             swatch.style.color = "white";
         }        
-        document.getElementById("tagLine").innerText = "You crafted a soothing salve. You feel safer already.";
+        document.getElementById("tagLine").innerText = "You crafted a bubble drink!";
     }
-    document.getElementById("serumMonitor").innerText = "Soothe serum: " + serum + "/" + recipe;
+    document.getElementById("serumMonitor").innerText = "Bubble serum: " + serum + "/" + recipe;
 }
 
 var boomTile;
 function boomProtocol(uCoords) { // Called whenever a mine is revealed during the game
-    if (salves > 0) {
-        consumeSalve(uCoords);
+    if (drinks > 0) {
+        consumeDrink(uCoords);
     } else {
         isPlaying = false;
         if (movesLeft < 96) { // End game random message
@@ -139,22 +139,22 @@ function boomProtocol(uCoords) { // Called whenever a mine is revealed during th
         }
         boomTile = uCoords;
         setTimeout(awaken, 500); // Line 155
+        loseDialog(uCoords);
     }
 }
-function consumeSalve(uCoords) {
-    swatch = document.getElementById("salves");
+function consumeDrink(uCoords) {
+    swatch = document.getElementById("drinks");
     bom = document.getElementById(uCoords);
-    --salves;
+    displayTag("drink");
+    --drinks;
     ++movesLeft;
     bom.style.backgroundImage = "url(graphics/soothed.svg)";
     updateFlagSwatch(--flagCounter);
-    swatch.innerText = "0" + salves;
-    if (salves == 0) {
-        document.getElementById("tagLine").innerText = "Careful now. This was your last one.";
-        swatch.style.color = "red";
+    swatch.innerText = "0" + drinks;
+    if (drinks == 0) {
+        swatch.style.color = "darkred";
     } else {
-        document.getElementById("tagLine").innerText = "Salve administered! You're safe.";
-        if (salves < 3) {
+        if (drinks < 3) {
             swatch.style.color = "white";
         }
     }
