@@ -109,3 +109,13 @@
 #salveSwatch {
     width: 250px;
 }
+#salves {
+    animation-duration: 500ms;
+    animation-iteration-count: 1;
+}
+#serumMonitor {
+     font-family: HVD;
+     color:rgb(116, 215, 240);
+     font-size: 2em;
+     margin: 0 auto;
+}

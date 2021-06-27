@@ -43,3 +43,16 @@
         transform: translateY(-1%);
     }
 }
+@keyframes standOut {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+        color: aquamarine;
+    }
+    100% {
+        color: white;
+        transform: scale(1);
+    }
+}   

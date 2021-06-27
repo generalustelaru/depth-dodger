@@ -4,14 +4,12 @@ var boardCover = new Map(); // Stores oCoords and their statuses.
 function resetGame() { 
     document.getElementById("tagLine").innerText = "A New Daring Adventure!";
     document.getElementById("gameArea").innerHTML = "";
+    document.getElementById("serumMonitor").innerText = "Soothe serum: " + serum + "/" + recipe;
     virginMap = true;
     movesLeft = 381; // 480-99 (381).
     boardElements = new Map();
     boardCover = new Map();    
     drawGameBoard();
-    //let startButton = document.getElementById("start");.
-    //startButton.setAttribute("onclick", "startGame()");.
-    //startButton.innerText = "Start";.
     isPlaying = false;
     startGame();
 
@@ -118,11 +116,14 @@ function storeSerum(amount) { // Determines and executes the 'crafting' of a new
         serum -= recipe;
         swatch = document.getElementById("salves");
         swatch.innerText = "0" + salves;
-        swatch.style.color = "white";
+        if (salves > 2) {
+            swatch.style.color = "lightgreen";
+        } else {
+            swatch.style.color = "white";
+        }        
         document.getElementById("tagLine").innerText = "You crafted a soothing salve. You feel safer already.";
-    } else {
-        document.getElementById("tagLine").innerText = "Soothe serum: " + serum + "/" + recipe;
     }
+    document.getElementById("serumMonitor").innerText = "Soothe serum: " + serum + "/" + recipe;
 }
 
 var boomTile;
@@ -147,13 +148,15 @@ function consumeSalve(uCoords) {
     ++movesLeft;
     bom.style.backgroundImage = "url(graphics/soothed.svg)";
     updateFlagSwatch(--flagCounter);
-    if (salves > 0) {
-        swatch.innerText = "0" + salves;
-        document.getElementById("tagLine").innerText = "Salve administered! You're safe.";
-    } else {
+    swatch.innerText = "0" + salves;
+    if (salves == 0) {
         document.getElementById("tagLine").innerText = "Careful now. This was your last one.";
-        swatch.innerText = "00";
         swatch.style.color = "red";
+    } else {
+        document.getElementById("tagLine").innerText = "Salve administered! You're safe.";
+        if (salves < 3) {
+            swatch.style.color = "white";
+        }
     }
 }
 function awaken() { // Separated from boomProtocol() to convey a brief suspence before ending the game.

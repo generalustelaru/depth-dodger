@@ -21,6 +21,7 @@ function startGame() { // Sets up initial conditions not accounting for past pla
         updateFlagSwatch(flagCounter);
         salves = 1; // Soothing Salves is a new game mechanism. It makes it easier to solve ambiguous configurations.
         serum = 0; // Every single reveal grants an amount of serum (1~8). 100 serum makes 1 salve.
+        document.getElementById("serumMonitor").innerText = "Soothe serum: " + serum + "/" + recipe;
         let swatch = document.getElementById("salves");
         swatch.innerText = "01";
         swatch.style.color = "white";

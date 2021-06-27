@@ -34,7 +34,7 @@ function toOverCoords(x, y) {
     return x + "o" + y;
 }
 
-function convertCoords(coords) { // used extensively throught to access stacked tiles
+function convertCoords(coords) { // used extensively throughout for accessing stacked tiles
     let plane = RegExp(/[uo]/);
     if (coords.match(plane) == "o") {
         return getX(coords) + "u" + getY(coords);
