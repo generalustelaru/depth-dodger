@@ -118,6 +118,7 @@
      color:rgb(116, 215, 240);
      font-size: 2em;
      margin: 0 auto;
+     height: 31px;
 }
 #dialog {
     z-index: 9;
@@ -125,4 +126,17 @@
     width: 200px;
     height: 400px;
     background-color: bisque;
+}
+#info {
+    padding-top: 10px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: white;
+    user-select: text;
+}
+a:link {
+    color: white;
+    user-select: text;
+}
+a:visited {
+    color: bisque
 }

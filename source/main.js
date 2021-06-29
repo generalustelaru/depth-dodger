@@ -172,7 +172,7 @@ function awaken() { // Separated from boomProtocol() to convey a brief suspence 
             ++wrongFlags;
         }
     }
-    calculateScore();
+    calculateScore("lose");
 }
 
 function burstProtocol(uCoords) { // Called when revealing a blank/empty tile
@@ -247,13 +247,16 @@ function successProtocol() {
             document.getElementById(convertCoords(oCoords)).style.opacity = "0%";
         }
     }
-    calculateScore();
+    calculateScore("win");
 }
 
-function calculateScore() {
-    let tactics = drinks / 2 + serum;
+function calculateScore(outcome) {
+    let tactics = drinks * 100 + serum;
     let sneakyness = 99 - flagCounter - wrongFlags;
     let score = tactics + sneakyness;
+    if (outcome == "win") {
+        score += 100;
+    }
     let scoreText = "SCORE: " + score + " PTS.";
     let topScore = localStorage.getItem("topScore");
     let serumMonitor = document.getElementById("serumMonitor");
@@ -267,4 +270,5 @@ function calculateScore() {
     } else {
         serumMonitor.innerText = scoreText + " — top score " + topScore;
     }
+    
 }
