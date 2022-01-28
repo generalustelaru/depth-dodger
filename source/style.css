@@ -58,13 +58,14 @@
     animation-direction: alternate;
     animation-timing-function: ease-in-out;
     transition-property: all;
+    opacity: 0%; /* DEBUG */
 }
 .coverTile {
     position: absolute;
     height: 40px;
     width: 40px;
     float: left;
-    opacity: 100%; /*DEBUG*/
+    opacity: 100%; /* DEBUG */
     transition-property: all;
     transition-duration: 500ms;
 }

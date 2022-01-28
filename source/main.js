@@ -219,7 +219,8 @@ function burstProtocol(uCoords) { // Called when revealing a blank/empty tile
                     document.getElementById(oScanCoords).style.opacity = "0%";
                     boardCover.set(oScanCoords, "revealed");
                     --movesLeft; // Update game win condition appropriately.
-                    let animatedTile = document.getElementById(uScanCoords); // Apply animation.
+                    let animatedTile = document.getElementById(uScanCoords); // Reveal & Animate.
+                    animatedTile.style.opacity = "100%";
                     animationDelay += 0.005;
                     animatedTile.style.animationDelay = animationDelay + "s";
                     animatedTile.style.animationName = "burst";
@@ -240,6 +241,7 @@ function successProtocol() {
     for (let i = 0; i < 480; i++) { // Remove bubbles and reveal the mines. Game Won.
         let oCoords = coordIterator.next().value;
         if (boardCover.get(oCoords) != "revealed" ) {
+            document.getElementById(convertCoords(oCoords)).style.opacity = "100%";
             document.getElementById(oCoords).style.transitionDuration = "1200ms";
             document.getElementById(oCoords).style.opacity = "0%";
         } else {

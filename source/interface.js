@@ -84,11 +84,13 @@ function revealTile(oCoords) { // Left-click on a tile.
             --movesLeft;
             let tileStatus = boardElements.get(uCoords);
             let bubl = RegExp(/bubl/);
+            const revealedTile = document.getElementById(convertCoords(oCoords))
+            revealedTile.style.opacity = "100%";
             if (tileStatus.match(bubl)) { // The number of mines surounding the bubble translates into serum
                 let extract = RegExp(/\d/);
                 let vial = tileStatus.match(extract)[0];
-                storeSerum(vial);
-                document.getElementById(convertCoords(oCoords)).style.animationName = "perturb";
+                storeSerum(vial);                
+                revealedTile.style.animationName = "perturb";                
             } else {
                 switch (tileStatus) {
                     case "blank":
