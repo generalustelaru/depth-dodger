@@ -116,7 +116,7 @@ function storeSerum(amount) { // Determines and executes the 'crafting' of a new
         serum -= recipe;
         swatch = document.getElementById("drinks");
         swatch.innerText = "0" + drinks;
-        if (drinks > 2) {
+        if (drinks > 1) {
             swatch.style.color = "lightgreen";
         } else {
             swatch.style.color = "white";
@@ -144,6 +144,7 @@ function boomProtocol(uCoords) { // Called whenever a mine is revealed during th
 }
 sothedMines = 0;
 function consumeDrink(uCoords) {
+    boardCover.set(convertCoords(uCoords), 'soothed');
     swatch = document.getElementById("drinks");
     bom = document.getElementById(uCoords);
     displayTag("drink");
@@ -153,12 +154,14 @@ function consumeDrink(uCoords) {
     bom.style.backgroundImage = "url(graphics/soothed.svg)";
     updateFlagSwatch(--flagCounter);
     swatch.innerText = "0" + drinks;
-    if (drinks == 0) {
-        swatch.style.color = "darkred";
-    } else {
-        if (drinks < 3) {
+    switch (drinks) {
+        case 1:
             swatch.style.color = "white";
-        }
+            break;
+        case 0:
+            swatch.style.color = "darkred";
+        default:
+            break;
     }
 }
 var wrongFlags = 0;
@@ -240,7 +243,8 @@ function successProtocol() {
     let coordIterator = boardCover.keys();
     for (let i = 0; i < 480; i++) { // Remove bubbles and reveal the mines. Game Won.
         let oCoords = coordIterator.next().value;
-        if (boardCover.get(oCoords) != "revealed" ) {
+        const coverStatus = boardCover.get(oCoords);
+        if (coverStatus != "revealed") { //TODO: add || soothed map check
             document.getElementById(convertCoords(oCoords)).style.opacity = "100%";
             document.getElementById(oCoords).style.transitionDuration = "1200ms";
             document.getElementById(oCoords).style.opacity = "0%";
