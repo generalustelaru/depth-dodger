@@ -6,7 +6,7 @@ function resetGame() {
     document.getElementById("gameArea").innerHTML = "";
     document.getElementById("serumMonitor").innerText = "Soothe serum: " + serum + "/" + recipe;
     virginMap = true;
-    movesLeft = 381; // 480-99 (381).
+    movesLeft = 381; // 480-99 = 381.
     boardElements = new Map();
     boardCover = new Map();    
     drawGameBoard();
@@ -49,28 +49,28 @@ function drawGameBoard() { // Called on page load. Does not start the game.
     document.getElementById("gameArea").appendChild(gameBoard);
 }
 
-var axisPattern = ["x", "y", "x", "x", "y", "y", "x", "x"]; // tile-checking pattern for bubble values and multi-reveals (bursts)
-var driftPattern = [-1, -1, 1, 1, 1, 1, -1, -1];
+const axisPattern = ["x", "y", "x", "x", "y", "y", "x", "x"]; // tile-checking pattern for bubble values and multi-reveals (bursts)
+const driftPattern = [-1, -1, 1, 1, 1, 1, -1, -1];
 
 function populateBoard(startCoords) {
     let mines = 99;
     let tiles = 480;
     //let delay = 0.0;
     while (mines > 0) { // Mines are placed randomly at an ever-increasing probability rate.
-        var coordIterator = boardElements.keys();
+        const coordIterator = boardElements.keys();
         for (let i = 0; i < 480; i++) {
-            let coords = coordIterator.next().value;
+            const coords = coordIterator.next().value;
             if (coords == startCoords || boardElements.get(coords) == "mine") {
                 continue;
             }
-            let dieRoll = Math.random();
+            const dieRoll = Math.random();
             if (dieRoll <= mines / tiles) {
                 boardElements.set(coords, "mine");
                 let mine = document.getElementById(coords);                
                 mine.style.backgroundImage = "url(graphics/mine.svg)";
                 mine.style.animationName = "sleeping";
                 mine.style.animationDuration = "3s";
-                let delay = Math.random();
+                const delay = Math.random();
                 mine.style.animationDelay = delay + "s";
                 mine.style.animationIterationCount = "infinite";
                 --mines;
@@ -78,9 +78,9 @@ function populateBoard(startCoords) {
             --tiles;
         }
     }
-    var coordIterator = boardElements.keys();
+    const coordIterator = boardElements.keys();
     for (let i = 0; i < 480; i++) { // Every non-mine tile is checked for adjacent mines
-        let uCoords = coordIterator.next().value;
+        const uCoords = coordIterator.next().value;
         if (boardElements.get(uCoords) == "mine") {
             continue;
         }
@@ -120,7 +120,7 @@ function storeSerum(amount) { // Determines and executes the 'crafting' of a new
             swatch.style.color = "lightgreen";
         } else {
             swatch.style.color = "white";
-        }        
+        }
         document.getElementById("tagLine").innerText = "You crafted a bubble drink!";
     }
     document.getElementById("serumMonitor").innerText = "Bubble serum: " + serum + "/" + recipe;
@@ -244,7 +244,7 @@ function successProtocol() {
     for (let i = 0; i < 480; i++) { // Remove bubbles and reveal the mines. Game Won.
         let oCoords = coordIterator.next().value;
         const coverStatus = boardCover.get(oCoords);
-        if (coverStatus != "revealed") { //TODO: add || soothed map check
+        if (coverStatus != "revealed") {
             document.getElementById(convertCoords(oCoords)).style.opacity = "100%";
             document.getElementById(oCoords).style.transitionDuration = "1200ms";
             document.getElementById(oCoords).style.opacity = "0%";
@@ -257,9 +257,12 @@ function successProtocol() {
 }
 
 function calculateScore(outcome) {
-    let tactics = drinks * 100 + serum;
-    let sneakyness = 99 - flagCounter - wrongFlags;
+    const tactics = drinks * 100 + serum;
+    const sneakyness = 99 - flagCounter - wrongFlags;
     let score = tactics + sneakyness;
+    if (outcome == "lose" && score < 0) {
+        score = 0;
+    }
     if (outcome == "win") {
         score += 100;
     }
