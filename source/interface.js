@@ -17,8 +17,8 @@ function startGame() { // Sets up initial conditions not accounting for past pla
         startButton.innerText = "Reset";
         startButton.setAttribute("onclick", "resetGame()");
         isPlaying = true;
-        flagCounter = 99;        
-        updateFlagSwatch(flagCounter);
+        absentFlags = 99;        
+        updateFlagSwatch(absentFlags);
         drinks = 1; // Soothing drinks is a new game mechanism. It makes it easier to solve ambiguous configurations.
         serum = 0; // Every single reveal grants an amount of serum (1~8). 100 serum makes 1 salve.
         document.getElementById("serumMonitor").innerText = "Bubble serum: " + serum + "/" + recipe;
@@ -46,7 +46,7 @@ function leave() {
     activeCoverTile = "";
 }
 
-var flagCounter;
+var absentFlags;
 function markTile() { // Right-click behaviour.
     if (isPlaying == true && activeCoverTile != "") {
         let coverStatus = boardCover.get(activeCoverTile); // Map holding the state of each tile covering the board (oCoords).
@@ -55,18 +55,19 @@ function markTile() { // Right-click behaviour.
             case "covered": 
                 boardCover.set(activeCoverTile, "highSus"); // "highSus" means it's "flagged." Wrong placements get corrected at game end.
                 coverTile.style.backgroundImage = "url(graphics/highSus.svg)";
-                updateFlagSwatch(--flagCounter);
+                updateFlagSwatch(--absentFlags);
                 break;
             case "highSus":
                 boardCover.set(activeCoverTile, "lowSus"); // Secondary flagging. lowSus have no impact.
                 coverTile.style.backgroundImage = "url(graphics/lowSus.svg)";
-                updateFlagSwatch(++flagCounter);
+                updateFlagSwatch(++absentFlags);
                 break;
             case "lowSus":
                 boardCover.set(activeCoverTile, "covered");
                 coverTile.style.backgroundImage = "url(graphics/covered.svg)";
                 break;
         }
+        winCheck();
     }
 }
 
@@ -103,9 +104,13 @@ function revealTile(oCoords) { // Left-click on a tile.
                         break;
                 }
             }
-            if (movesLeft == 0) {
-                successProtocol(); // Reveal all remaining mines and end the game in a win.
-            }       
+            winCheck();
         }
     } 
+}
+
+function winCheck() {
+    if (movesLeft == 0 && absentFlags == 0) {
+        successProtocol(); // Reveal all hidden mines and end the game in a win.
+    }
 }

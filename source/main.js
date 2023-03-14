@@ -12,7 +12,7 @@ function resetGame() {
     drawGameBoard();
     isPlaying = false;
     startGame();
-
+    
 }
 
 function drawGameBoard() { // Called on page load. Does not start the game.
@@ -152,7 +152,7 @@ function consumeDrink(uCoords) {
     --drinks;
     ++movesLeft;
     bom.style.backgroundImage = "url(graphics/soothed.svg)";
-    updateFlagSwatch(--flagCounter);
+    updateFlagSwatch(--absentFlags);
     swatch.innerText = "0" + drinks;
     switch (drinks) {
         case 1:
@@ -217,7 +217,7 @@ function burstProtocol(uCoords) { // Called when revealing a blank/empty tile
                 redundancyCheck = boardCover.get(oScanCoords); // Avoid revealing already-revealed tiles
                 if (redundancyCheck != "revealed") {
                     if (redundancyCheck == "highSus") {
-                        updateFlagSwatch(++flagCounter);
+                        updateFlagSwatch(++absentFlags);
                     }
                     document.getElementById(oScanCoords).style.opacity = "0%";
                     boardCover.set(oScanCoords, "revealed");
@@ -258,7 +258,7 @@ function successProtocol() {
 
 function calculateScore(outcome) {
     const tactics = drinks * 100 + serum;
-    const sneakyness = 99 - flagCounter - wrongFlags;
+    const sneakyness = 99 - absentFlags - wrongFlags;
     let score = tactics + sneakyness;
     if (outcome == "lose" && score < 0) {
         score = 0;
