@@ -35,8 +35,8 @@
 }
 /* Game board section */
 #gameBoard{
-    height: 657px;
-    width: 1231px;
+    height: 640px;  
+    width: 1200px;
 }
 .row {
     height: 40px;
