@@ -1,6 +1,6 @@
 # Depth Dodger
 
-It's Minesweeper, but underwater: 
+It's Minesweeper, but underwater:
 
 Includes:
 - Classic Minesweeper setup

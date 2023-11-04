@@ -17,7 +17,7 @@ function startGame() { // Sets up initial conditions not accounting for past pla
         startButton.innerText = "Reset";
         startButton.setAttribute("onclick", "resetGame()");
         isPlaying = true;
-        absentFlags = 99;        
+        absentFlags = 99;
         updateFlagSwatch(absentFlags);
         drinks = 1; // Soothing drinks is a new game mechanism. It makes it easier to solve ambiguous configurations.
         serum = 0; // Every single reveal grants an amount of serum (1~8). 100 serum makes 1 salve.
@@ -30,7 +30,7 @@ function startGame() { // Sets up initial conditions not accounting for past pla
             let oCoords = oCoordIterator.next().value;
             let coverTile = document.getElementById(oCoords);
             coverTile.setAttribute("onmouseover", "hover(\"" + oCoords + "\")");
-            coverTile.setAttribute("onmouseleave", "leave()");             
+            coverTile.setAttribute("onmouseleave", "leave()");
             coverTile.setAttribute("onclick", "revealTile(\"" + oCoords + "\")");
         }   
     } else {
@@ -90,8 +90,8 @@ function revealTile(oCoords) { // Left-click on a tile.
             if (tileStatus.match(bubl)) { // The number of mines surounding the bubble translates into serum
                 let extract = RegExp(/\d/);
                 let vial = tileStatus.match(extract)[0];
-                storeSerum(vial);                
-                revealedTile.style.animationName = "perturb";                
+                storeSerum(vial);
+                revealedTile.style.animationName = "perturb";
             } else {
                 switch (tileStatus) {
                     case "blank":
@@ -106,7 +106,7 @@ function revealTile(oCoords) { // Left-click on a tile.
             }
             winCheck();
         }
-    } 
+    }
 }
 
 function winCheck() {

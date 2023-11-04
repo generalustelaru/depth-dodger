@@ -120,7 +120,7 @@ function loseDialog(uCoords) {
     dialog.offsetTop = top;
     //let body = document.querySelector("body");
     gameArea.append(dialog); */
-    
+
     //console.log("left: " + left + ", top: " + top);
     console.log("Did you bring me anything?");
 }

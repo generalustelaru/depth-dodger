@@ -5,8 +5,8 @@
 }
 
 #depths {
-    position: fixed; 
-    top: 0; 
+    position: fixed;
+    top: 0;
     left: 0;
     min-width: 100%;
     min-height: 100%;
@@ -35,7 +35,7 @@
 }
 /* Game board section */
 #gameBoard{
-    height: 640px;  
+    height: 640px;
     width: 1200px;
 }
 .row {
@@ -101,7 +101,7 @@
 }
 .swatchInfo {
     font-family: HVD;
-    text-align: center;  
+    text-align: center;
     color: white;
 }
 #mineSwatch {
@@ -115,11 +115,11 @@
     animation-iteration-count: 1;
 }
 #serumMonitor {
-     font-family: HVD;
-     color:rgb(116, 215, 240);
-     font-size: 2em;
-     margin: 0 auto;
-     height: 31px;
+    font-family: HVD;
+    color:rgb(116, 215, 240);
+    font-size: 2em;
+    margin: 0 auto;
+    height: 31px;
 }
 #dialog {
     z-index: 9;

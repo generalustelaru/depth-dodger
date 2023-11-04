@@ -1,18 +1,17 @@
 var boardElements = new Map(); // Stores uCoords and their statuses.
 var boardCover = new Map(); // Stores oCoords and their statuses.
 
-function resetGame() { 
+function resetGame() {
     document.getElementById("tagLine").innerText = "A New Daring Adventure!";
     document.getElementById("gameArea").innerHTML = "";
     document.getElementById("serumMonitor").innerText = "Soothe serum: " + serum + "/" + recipe;
     virginMap = true;
     movesLeft = 381; // 480-99 = 381.
     boardElements = new Map();
-    boardCover = new Map();    
+    boardCover = new Map();
     drawGameBoard();
     isPlaying = false;
     startGame();
-    
 }
 
 function drawGameBoard() { // Called on page load. Does not start the game.
@@ -23,11 +22,11 @@ function drawGameBoard() { // Called on page load. Does not start the game.
         row.className = "row";
         for (let y = 0; y < 30; y++) {
             // tileContainer: Holds two overlapping elements
-            let tileContainer = document.createElement("div");            
+            let tileContainer = document.createElement("div");
             tileContainer.className = "tileContainer";
             row.appendChild(tileContainer);
             // boardTile: Displays a mine, a bubble, or nothing. Right now it's nothing.
-            let boardTile = document.createElement("div");            
+            let boardTile = document.createElement("div");
             boardTile.className = "boardTile";
             let coords = x + "u" + y;
             boardTile.id = coords;
@@ -35,7 +34,7 @@ function drawGameBoard() { // Called on page load. Does not start the game.
             boardElements.set(coords, "blank");
             tileContainer.appendChild(boardTile);
             // coverTile: Displays flags and obscures the board.
-            let coverTile = document.createElement("div");            
+            let coverTile = document.createElement("div");
             coverTile.className = "coverTile";
             let coverCoords = x + "o" + y;
             coverTile.id = coverCoords;
@@ -66,7 +65,7 @@ function populateBoard(startCoords) {
             const dieRoll = Math.random();
             if (dieRoll <= mines / tiles) {
                 boardElements.set(coords, "mine");
-                let mine = document.getElementById(coords);                
+                let mine = document.getElementById(coords);
                 mine.style.backgroundImage = "url(graphics/mine.svg)";
                 mine.style.animationName = "sleeping";
                 mine.style.animationDuration = "3s";
@@ -198,7 +197,7 @@ function burstProtocol(uCoords) { // Called when revealing a blank/empty tile
             }
         }
         if (allFound == true) {
-            displayTag("progress"); 
+            displayTag("progress");
             break;
         }
         let x = getX(focusCoords); // The tile's coordinates are then use to perform a circular check.
@@ -279,5 +278,4 @@ function calculateScore(outcome) {
     } else {
         serumMonitor.innerText = scoreText + " — top score " + topScore;
     }
-    
 }
