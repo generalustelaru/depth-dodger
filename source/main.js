@@ -143,7 +143,6 @@ function boomProtocol(uCoords) { // Called whenever a mine is revealed during th
 }
 sothedMines = 0;
 function consumeDrink(uCoords) {
-    boardCover.set(convertCoords(uCoords), 'soothed');
     swatch = document.getElementById("drinks");
     bom = document.getElementById(uCoords);
     displayTag("drink");
