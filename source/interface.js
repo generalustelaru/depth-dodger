@@ -32,7 +32,7 @@ function startGame() { // Sets up initial conditions not accounting for past pla
             coverTile.setAttribute("onmouseover", "hover(\"" + oCoords + "\")");
             coverTile.setAttribute("onmouseleave", "leave()");
             coverTile.setAttribute("onclick", "revealTile(\"" + oCoords + "\")");
-        }   
+        }
     } else {
         resetGame();
     }
@@ -52,7 +52,7 @@ function markTile() { // Right-click behaviour.
         let coverStatus = boardCover.get(activeCoverTile); // Map holding the state of each tile covering the board (oCoords).
         let coverTile = document.getElementById(activeCoverTile);
         switch (coverStatus) {
-            case "covered": 
+            case "covered":
                 boardCover.set(activeCoverTile, "highSus"); // "highSus" means it's "flagged." Wrong placements get corrected at game end.
                 coverTile.style.backgroundImage = "url(graphics/highSus.svg)";
                 updateFlagSwatch(--absentFlags);
